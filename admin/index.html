@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>栗浩宇的博客管理后台</title>
+  <link href="https://unpkg.com/netlify-cms@^2.0.0/dist/cms.css" rel="stylesheet" />
+  <style>
+    /* 自定义CMS主题样式 */
+    :root {
+      --colorPrimary: #4ecdc4;
+      --colorSecondary: #45b7d1;
+      --colorTertiary: #667eea;
+    }
+    
+    /* CMS界面自定义样式 */
+    .css-1ih5xgs-SidebarContainer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    .css-1k0bqm0-AppHeaderContent h1 {
+      color: #4ecdc4 !important;
+    }
+    
+    .css-1yjbyww-CollectionTopContainer {
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(69, 183, 209, 0.1) 100%) !important;
+    }
+    
+    /* 编辑器主题 */
+    .css-1g4zbq4-EditorContainer {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+    }
+    
+    /* 按钮样式 */
+    .css-1f1r55t-Button, .css-1bys6n1-StyledButton {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+      border: none !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .css-1f1r55t-Button:hover, .css-1bys6n1-StyledButton:hover {
+      background: linear-gradient(45deg, #45b7d1, #4ecdc4) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3) !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Netlify CMS 界面将在这里加载 -->
+  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  
+  <script>
+    // 自定义预览模板
+    CMS.registerPreviewTemplate('posts', createClass({
+      render: function() {
+        const entry = this.props.entry;
+        const title = entry.getIn(['data', 'title']);
+        const body = entry.getIn(['data', 'body']);
+        const tags = entry.getIn(['data', 'tags']);
+        const date = entry.getIn(['data', 'date']);
+        
+        return h('div', {
+          style: {
+            padding: '20px',
+            maxWidth: '800px',
+            margin: '0 auto',
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            lineHeight: '1.6'
+          }
+        }, [
+          h('h1', {
+            style: {
+              color: '#4ecdc4',
+              marginBottom: '10px',
+              fontSize: '2.5rem'
+            }
+          }, title),
+          h('div', {
+            style: {
+              color: '#666',
+              marginBottom: '20px',
+              fontSize: '0.9rem'
+            }
+          }, [
+            h('span', {}, '📅 ' + (date ? new Date(date).toLocaleDateString('zh-CN') : '')),
+            tags && h('div', {
+              style: { marginTop: '10px' }
+            }, tags.map(tag => 
+              h('span', {
+                style: {
+                  background: 'rgba(78, 205, 196, 0.3)',
+                  padding: '5px 15px',
+                  borderRadius: '20px',
+                  fontSize: '0.8rem',
+                  marginRight: '10px',
+                  color: '#4ecdc4'
+                }
+              }, tag)
+            ))
+          ]),
+          h('div', {
+            style: {
+              color: '#333',
+              fontSize: '1.1rem',
+              lineHeight: '1.8'
+            },
+            dangerouslySetInnerHTML: {
+              __html: this.props.widgetFor('body')
+            }
+          })
+        ]);
+      }
+    }));
+
+    // 自定义编辑器配置
+    CMS.init({
+      config: {
+        load_config_file: true
+      }
+    });
+    
+    // 欢迎消息
+    console.log('🎉 欢迎来到栗浩宇的博客管理后台！');
+  </script>
+</body>
+</html>

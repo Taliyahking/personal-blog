@@ -1,0 +1,7 @@
+# Netlify 重定向配置
+
+# SPA 路由支持
+/*    /index.html   200
+
+# Admin 路由
+/admin/*   /admin/index.html   200
