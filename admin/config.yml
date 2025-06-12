@@ -1,0 +1,294 @@
+# Netlify CMS 优化配置文件
+backend:
+  name: git-gateway
+  branch: main
+  squash_merges: true
+
+# 媒体文件配置
+media_folder: "assets/images/uploads"
+public_folder: "/assets/images/uploads"
+
+# 网站配置
+site_url: https://li-haoyu.netlify.app
+display_url: https://li-haoyu.netlify.app
+logo_url: https://li-haoyu.netlify.app/favicon.ico
+
+# CMS设置
+publish_mode: editorial_workflow # 启用编辑工作流，可以保存草稿
+search: true
+
+# 集合配置
+collections:
+  # 📝 博客文章集合
+  - name: "posts"
+    label: "📝 博客文章"
+    label_singular: "博客文章"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "blog/{{slug}}"
+    editor:
+      preview: true
+    view_filters:
+      - label: "已发布"
+        field: published
+        pattern: true
+      - label: "草稿"
+        field: published
+        pattern: false
+      - label: "技术类"
+        field: tags
+        pattern: "技术"
+    view_groups:
+      - label: "年份"
+        field: date
+        pattern: \d{4}
+      - label: "分类"
+        field: category
+    sortable_fields: ['title', 'date', 'category']
+    fields:
+      - { 
+          label: "📄 文章标题", 
+          name: "title", 
+          widget: "string", 
+          hint: "输入吸引人的文章标题（建议20字以内）",
+          pattern: ['.{1,50}', "标题不能超过50个字符"]
+        }
+      - { 
+          label: "📅 发布日期", 
+          name: "date", 
+          widget: "datetime", 
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          hint: "选择文章发布日期" 
+        }
+      - { 
+          label: "📂 文章分类", 
+          name: "category", 
+          widget: "select",
+          options: ["技术分享", "学习笔记", "项目经验", "生活感悟", "专业知识", "其他"],
+          default: "技术分享",
+          hint: "选择文章所属分类"
+        }
+      - { 
+          label: "✍️ 文章摘要", 
+          name: "excerpt", 
+          widget: "text", 
+          required: false,
+          hint: "文章的简短描述（100字以内），会显示在文章列表中",
+          pattern: ['.{0,100}', "摘要不能超过100个字符"]
+        }
+      - { 
+          label: "🏷️ 文章标签", 
+          name: "tags", 
+          widget: "list",
+          allow_add: true,
+          collapsed: false,
+          field: { label: "标签", name: "tag", widget: "string" },
+          default: ["技术"],
+          hint: "添加相关标签，有助于文章分类和搜索。点击下方'添加标签'按钮"
+        }
+      - { 
+          label: "🖼️ 封面图片", 
+          name: "featured_image", 
+          widget: "image", 
+          required: false,
+          hint: "文章封面图片（建议尺寸：1200x630px）"
+        }
+      - { 
+          label: "🔍 SEO关键词", 
+          name: "keywords", 
+          widget: "string", 
+          required: false,
+          hint: "SEO关键词，用逗号分隔（如：Python,编程,教程）"
+        }
+      - { 
+          label: "📝 正文内容", 
+          name: "body", 
+          widget: "markdown",
+          hint: "使用Markdown格式编写文章。支持：**粗体** *斜体* `代码` [链接](url) ![图片](url)",
+          editor_components: ["image", "code-block"],
+          modes: ["rich_text", "raw"]
+        }
+      - { 
+          label: "⚙️ 发布状态", 
+          name: "published", 
+          widget: "boolean", 
+          default: true,
+          hint: "关闭后文章将保存为草稿"
+        }
+      - { 
+          label: "📌 是否置顶", 
+          name: "pinned", 
+          widget: "boolean", 
+          default: false,
+          hint: "置顶文章会显示在列表最前面"
+        }
+
+  # 🚀 项目展示管理
+  - name: "projects"
+    label: "🚀 项目展示"
+    label_singular: "项目"
+    folder: "_projects"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    sortable_fields: ['title', 'weight', 'featured']
+    fields:
+      - { 
+          label: "🎯 项目名称", 
+          name: "title", 
+          widget: "string",
+          hint: "项目的完整名称"
+        }
+      - { 
+          label: "📋 项目简介", 
+          name: "description", 
+          widget: "text",
+          hint: "一句话描述项目功能和特点"
+        }
+      - { 
+          label: "🛠️ 技术栈", 
+          name: "technologies", 
+          widget: "list",
+          default: ["HTML", "CSS", "JavaScript"],
+          allow_add: true,
+          field: { label: "技术", name: "tech", widget: "string" },
+          hint: "项目使用的主要技术"
+        }
+      - { 
+          label: "📊 项目状态", 
+          name: "status", 
+          widget: "select",
+          options: ["进行中", "已完成", "维护中", "已停止"],
+          default: "已完成"
+        }
+      - { 
+          label: "🐙 GitHub仓库", 
+          name: "github_url", 
+          widget: "string", 
+          required: false,
+          hint: "GitHub仓库链接"
+        }
+      - { 
+          label: "🌐 在线演示", 
+          name: "demo_url", 
+          widget: "string", 
+          required: false,
+          hint: "项目在线演示地址"
+        }
+      - { 
+          label: "🖼️ 项目截图", 
+          name: "image", 
+          widget: "image", 
+          required: false,
+          hint: "项目截图或Logo"
+        }
+      - { 
+          label: "⚡ 显示权重", 
+          name: "weight", 
+          widget: "number", 
+          default: 0,
+          hint: "数字越大越靠前显示"
+        }
+      - { 
+          label: "⭐ 是否精选", 
+          name: "featured", 
+          widget: "boolean", 
+          default: true,
+          hint: "是否在首页显示此项目"
+        }
+      - { 
+          label: "📖 项目详情", 
+          name: "body", 
+          widget: "markdown", 
+          required: false,
+          hint: "详细介绍项目背景、功能、技术难点等"
+        }
+
+  # 📄 页面内容管理
+  - name: "pages"
+    label: "📄 页面管理"
+    files:
+      - label: "👤 关于页面"
+        name: "about"
+        file: "_data/about.yml"
+        fields:
+          - { label: "页面标题", name: "title", widget: "string", default: "关于我" }
+          - { label: "副标题", name: "subtitle", widget: "string", default: "我的经历" }
+          - { label: "个人简介", name: "bio", widget: "markdown", hint: "用Markdown编写个人介绍" }
+          - { 
+              label: "技能列表", 
+              name: "skills", 
+              widget: "list",
+              fields: [
+                { label: "技能名称", name: "name", widget: "string" },
+                { label: "图标", name: "icon", widget: "string", hint: "emoji或图标类名" },
+                { label: "熟练程度", name: "level", widget: "select", options: ["入门", "熟悉", "精通", "专家"] },
+                { label: "技能描述", name: "description", widget: "text" }
+              ]
+            }
+          - { 
+              label: "教育经历", 
+              name: "education", 
+              widget: "list",
+              fields: [
+                { label: "学校名称", name: "school", widget: "string" },
+                { label: "专业", name: "major", widget: "string" },
+                { label: "学历", name: "degree", widget: "string" },
+                { label: "时间", name: "duration", widget: "string" },
+                { label: "描述", name: "description", widget: "text", required: false }
+              ]
+            }
+
+      - label: "📞 联系信息"
+        name: "contact"
+        file: "_data/contact.yml"
+        fields:
+          - { label: "📧 邮箱地址", name: "email", widget: "string" }
+          - { label: "🐙 GitHub用户名", name: "github", widget: "string" }
+          - { label: "💬 微信号", name: "wechat", widget: "string" }
+          - { label: "🐧 QQ号", name: "qq", widget: "string" }
+          - { label: "📷 个人头像", name: "avatar", widget: "image", required: false }
+          - { label: "📍 所在城市", name: "location", widget: "string", required: false }
+          - { label: "👔 职业状态", name: "status", widget: "string", default: "学生" }
+
+  # ⚙️ 网站设置
+  - name: "settings"
+    label: "⚙️ 网站设置"
+    files:
+      - label: "🌐 网站配置"
+        name: "site_config"
+        file: "_data/site.yml"
+        fields:
+          - { label: "网站标题", name: "title", widget: "string", default: "栗浩宇的个人博客" }
+          - { label: "网站副标题", name: "subtitle", widget: "string", default: "分享技术与生活" }
+          - { label: "网站描述", name: "description", widget: "text", default: "东北大学测绘工程专业学生的技术博客" }
+          - { label: "网站关键词", name: "keywords", widget: "string", default: "博客,技术,测绘,编程,学习" }
+          - { label: "网站作者", name: "author", widget: "string", default: "栗浩宇" }
+          - { label: "网站语言", name: "language", widget: "string", default: "zh-CN" }
+
+      - label: "🧭 导航菜单"
+        name: "navigation"
+        file: "_data/navigation.yml"
+        fields:
+          - {
+              label: "主导航",
+              name: "main",
+              widget: "list",
+              fields: [
+                { label: "菜单名称", name: "name", widget: "string" },
+                { label: "链接地址", name: "url", widget: "string" },
+                { label: "是否新窗口打开", name: "external", widget: "boolean", default: false }
+              ]
+            }
+
+# 编辑器配置
+editor:
+  preview: true
+  frame: true
+
+# 国际化
+locale: 'zh_Hans'
