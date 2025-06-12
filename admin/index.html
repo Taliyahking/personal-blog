@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>栗浩宇的博客管理后台</title>
+  <link href="https://unpkg.com/netlify-cms@^2.0.0/dist/cms.css" rel="stylesheet" />
+  <style>
+    /* 自定义CMS主题样式 */
+    :root {
+      --colorPrimary: #4ecdc4;
+      --colorSecondary: #45b7d1;
+      --colorTertiary: #667eea;
+      --colorBackground: #0a0a0a;
+      --colorText: #ffffff;
+    }
+    
+    /* 主要容器样式 */
+    .css-1ih5xgs-SidebarContainer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    /* 顶部标题栏 */
+    .css-1k0bqm0-AppHeaderContent h1 {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      font-weight: 700 !important;
+    }
+    
+    .css-1k0bqm0-AppHeaderContent {
+      background: rgba(0, 0, 0, 0.8) !important;
+      backdrop-filter: blur(10px) !important;
+      border-bottom: 1px solid rgba(78, 205, 196, 0.2) !important;
+    }
+    
+    /* 集合列表区域 */
+    .css-1yjbyww-CollectionTopContainer {
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(69, 183, 209, 0.1) 100%) !important;
+      border-bottom: 1px solid rgba(78, 205, 196, 0.2) !important;
+    }
+    
+    /* 编辑器区域 */
+    .css-1g4zbq4-EditorContainer {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    }
+    
+    /* 按钮样式 */
+    .css-1f1r55t-Button, .css-1bys6n1-StyledButton {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+      border: none !important;
+      border-radius: 8px !important;
+      transition: all 0.3s ease !important;
+      font-weight: 600 !important;
+      text-transform: none !important;
+    }
+    
+    .css-1f1r55t-Button:hover, .css-1bys6n1-StyledButton:hover {
+      background: linear-gradient(45deg, #45b7d1, #4ecdc4) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3) !important;
+    }
+    
+    /* 侧边栏导航 */
+    .css-1ph1krh-SidebarNavLinkCollection {
+      border-radius: 8px !important;
+      margin: 4px 8px !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .css-1ph1krh-SidebarNavLinkCollection:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      transform: translateX(4px) !important;
+    }
+    
+    /* 表单输入框 */
+    .css-1hwfws3, .css-1hwfws3:focus {
+      border: 2px solid rgba(78, 205, 196, 0.3) !important;
+      border-radius: 8px !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .css-1hwfws3:focus {
+      border-color: #4ecdc4 !important;
+      box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1) !important;
+    }
+    
+    /* 标签样式 */
+    .css-tag-item {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+      border-radius: 15px !important;
+      color: white !important;
+      border: none !important;
+      font-weight: 500 !important;
+    }
+    
+    /* 列表项样式 */
+    .css-1d7c9bg-CardBody {
+      border-radius: 12px !important;
+      border: 1px solid rgba(78, 205, 196, 0.2) !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .css-1d7c9bg-CardBody:hover {
+      border-color: #4ecdc4 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15) !important;
+    }
+    
+    /* 预览区域 */
+    .css-preview-pane {
+      border-radius: 12px !important;
+      border: 1px solid rgba(78, 205, 196, 0.2) !important;
+    }
+    
+    /* 工具栏 */
+    .css-toolbar {
+      background: rgba(78, 205, 196, 0.1) !important;
+      border-radius: 8px !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    /* 加载动画 */
+    .css-loader {
+      border-color: #4ecdc4 transparent #4ecdc4 transparent !important;
+    }
+    
+    /* 成功提示 */
+    .css-notification-success {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+      border-radius: 8px !important;
+      border: none !important;
+    }
+    
+    /* 搜索框 */
+    .css-search-input {
+      border-radius: 25px !important;
+      border: 2px solid rgba(78, 205, 196, 0.3) !important;
+      background: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .css-1ih5xgs-SidebarContainer {
+        transform: translateX(-100%) !important;
+      }
+      
+      .css-sidebar-open .css-1ih5xgs-SidebarContainer {
+        transform: translateX(0) !important;
+      }
+    }
+    
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, #45b7d1, #4ecdc4);
+    }
+  </style>
+</head>
+<body>
+  <!-- Netlify CMS 界面将在这里加载 -->
+  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  
+  <script>
+    // 自定义预览模板
+    CMS.registerPreviewTemplate('posts', createClass({
+      render: function() {
+        const entry = this.props.entry;
+        const title = entry.getIn(['data', 'title']);
+        const body = entry.getIn(['data', 'body']);
+        const tags = entry.getIn(['data', 'tags']);
+        const date = entry.getIn(['data', 'date']);
+        const excerpt = entry.getIn(['data', 'excerpt']);
+        
+        return h('div', {
+          style: {
+            padding: '30px',
+            maxWidth: '800px',
+            margin: '0 auto',
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            lineHeight: '1.8',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '20px',
+            color: '#ffffff'
+          }
+        }, [
+          h('h1', {
+            style: {
+              background: 'linear-gradient(45deg, #4ecdc4, #45b7d1)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              marginBottom: '20px',
+              fontSize: '2.5rem',
+              fontWeight: '700'
+            }
+          }, title),
+          h('div', {
+            style: {
+              color: 'rgba(255, 255, 255, 0.8)',
+              marginBottom: '20px',
+              fontSize: '0.95rem',
+              display: 'flex',
+              gap: '20px',
+              alignItems: 'center'
+            }
+          }, [
+            h('span', {}, '📅 ' + (date ? new Date(date).toLocaleDateString('zh-CN') : '')),
+            tags && h('div', {
+              style: { display: 'flex', gap: '8px', flexWrap: 'wrap' }
+            }, tags.map(tag => 
+              h('span', {
+                style: {
+                  background: 'rgba(78, 205, 196, 0.3)',
+                  padding: '4px 12px',
+                  borderRadius: '15px',
+                  fontSize: '0.8rem',
+                  color: '#4ecdc4',
+                  border: '1px solid rgba(78, 205, 196, 0.5)'
+                }
+              }, tag)
+            ))
+          ]),
+          excerpt && h('div', {
+            style: {
+              background: 'rgba(255, 255, 255, 0.1)',
+              padding: '15px',
+              borderRadius: '10px',
+              marginBottom: '25px',
+              fontSize: '1.1rem',
+              fontStyle: 'italic',
+              borderLeft: '4px solid #4ecdc4'
+            }
+          }, excerpt),
+          h('div', {
+            style: {
+              color: 'rgba(255, 255, 255, 0.9)',
+              fontSize: '1.1rem',
+              lineHeight: '1.8'
+            },
+            dangerouslySetInnerHTML: {
+              __html: this.props.widgetFor('body')
+            }
+          })
+        ]);
+      }
+    }));
+
+    // 自定义编辑器配置
+    CMS.init({
+      config: {
+        load_config_file: true
+      }
+    });
+    
+    // 添加快捷键支持
+    document.addEventListener('keydown', function(e) {
+      // Ctrl+S 保存
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        const saveButton = document.querySelector('[data-testid="save-button"]');
+        if (saveButton) saveButton.click();
+      }
+      
+      // Ctrl+P 预览
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        const previewButton = document.querySelector('[data-testid="preview-button"]');
+        if (previewButton) previewButton.click();
+      }
+    });
+    
+    // 自定义通知
+    CMS.registerEventListener({
+      name: 'postSave',
+      handler: function() {
+        console.log('📝 文章保存成功！');
+      }
+    });
+    
+    // 欢迎消息
+    setTimeout(() => {
+      console.log('%c🎉 欢迎来到栗浩宇的博客管理后台！', 'color: #4ecdc4; font-size: 16px; font-weight: bold;');
+      console.log('%c💡 小贴士：使用 Ctrl+S 快速保存，Ctrl+P 预览文章', 'color: #45b7d1; font-size: 12px;');
+    }, 2000);
+  </script>
+</body>
+</html>
