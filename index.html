@@ -317,6 +317,106 @@
             color: #4ecdc4;
         }
 
+        .read-more {
+            color: #45b7d1;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: #4ecdc4;
+        }
+
+        /* 博客详情弹窗 */
+        .blog-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .blog-modal-content {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .blog-modal-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .blog-modal-close:hover {
+            color: #4ecdc4;
+            transform: scale(1.2);
+        }
+
+        .blog-modal-title {
+            color: #4ecdc4;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .blog-modal-meta {
+            color: #888;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .blog-modal-content-text {
+            color: #cccccc;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .blog-modal-content-text h1,
+        .blog-modal-content-text h2,
+        .blog-modal-content-text h3 {
+            color: #4ecdc4;
+            margin: 30px 0 15px 0;
+        }
+
+        .blog-modal-content-text p {
+            margin-bottom: 20px;
+        }
+
+        .blog-modal-content-text code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #4ecdc4;
+        }
+
+        .blog-modal-content-text pre {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
         /* 项目展示 */
         .projects-grid {
             display: grid;
@@ -765,38 +865,7 @@
         <div class="container">
             <h2 style="font-size: 3rem; text-align: center; margin-bottom: 60px; color: #4ecdc4;">我的博客</h2>
             <div class="blog-posts" id="blogPosts">
-                <!-- 示例博客文章 -->
-                <article class="blog-post">
-                    <div class="blog-post-meta">
-                        <span>📅 2024年12月</span>
-                        <span>👀 156 浏览</span>
-                    </div>
-                    <h3 class="blog-post-title">我的编程学习之路</h3>
-                    <div class="blog-post-excerpt">
-                        从测绘工程到编程，这是一个跨专业学习的有趣故事。在这篇文章中，我想分享一下自己是如何从零开始学习编程的，以及在这个过程中遇到的挑战和收获...
-                    </div>
-                    <div class="blog-post-tags">
-                        <span class="tag">编程</span>
-                        <span class="tag">学习</span>
-                        <span class="tag">成长</span>
-                    </div>
-                </article>
-
-                <article class="blog-post">
-                    <div class="blog-post-meta">
-                        <span>📅 2024年11月</span>
-                        <span>👀 203 浏览</span>
-                    </div>
-                    <h3 class="blog-post-title">东北大学测绘专业学习心得</h3>
-                    <div class="blog-post-excerpt">
-                        作为测绘工程专业的学生，我想分享一些学习测绘的心得体会，包括课程安排、实习经历、以及这个专业的发展前景...
-                    </div>
-                    <div class="blog-post-tags">
-                        <span class="tag">测绘</span>
-                        <span class="tag">专业</span>
-                        <span class="tag">大学</span>
-                    </div>
-                </article>
+                <!-- 博客文章将从CMS动态加载 -->
             </div>
 
             <!-- 留言区域 -->
@@ -927,6 +996,16 @@
         </div>
     </section>
 
+    <!-- 博客详情弹窗 -->
+    <div id="blogModal" class="blog-modal">
+        <div class="blog-modal-content">
+            <span class="blog-modal-close" onclick="closeBlogModal()">&times;</span>
+            <h1 id="blogModalTitle" class="blog-modal-title"></h1>
+            <div id="blogModalMeta" class="blog-modal-meta"></div>
+            <div id="blogModalContent" class="blog-modal-content-text"></div>
+        </div>
+    </div>
+
     <!-- 二维码弹窗 -->
     <div id="qrModal" class="qr-modal">
         <div class="qr-modal-content">
@@ -1032,23 +1111,20 @@
                 date: frontMatter.date || new Date().toISOString().split('T')[0],
                 tags: frontMatter.tags || [],
                 content: markdownContent,
-                excerpt: markdownContent.substring(0, 150) + (markdownContent.length > 150 ? '...' : ''),
-                views: Math.floor(Math.random() * 200) + 50
+                excerpt: markdownContent.substring(0, 150) + (markdownContent.length > 150 ? '...' : '')
             };
         }
 
         function updateBlogDisplay() {
             const container = document.getElementById('blogPosts');
             
-            // 清除现有的博客文章（保留示例文章作为fallback）
-            const existingBlogs = container.querySelectorAll('.blog-post[data-cms]');
-            existingBlogs.forEach(blog => blog.remove());
+            // 清除现有内容
+            container.innerHTML = '';
 
             if (blogs.length === 0) {
-                // 如果没有CMS文章，显示提示
+                // 如果没有博客文章，显示提示
                 const notice = document.createElement('div');
                 notice.className = 'glass-card';
-                notice.setAttribute('data-cms', 'true');
                 notice.style.textAlign = 'center';
                 notice.style.marginBottom = '30px';
                 notice.innerHTML = `
@@ -1056,19 +1132,19 @@
                     <p style="color: #cccccc; margin-bottom: 20px;">点击右下角的管理按钮，进入后台开始写你的第一篇博客！</p>
                     <button onclick="toggleAdminPanel()" class="btn btn-primary">进入博客管理</button>
                 `;
-                container.insertBefore(notice, container.firstChild);
+                container.appendChild(notice);
                 return;
             }
 
             // 添加CMS文章
-            blogs.forEach(blog => {
+            blogs.forEach((blog, index) => {
                 const article = document.createElement('article');
                 article.className = 'blog-post';
-                article.setAttribute('data-cms', 'true');
+                article.onclick = () => openBlogModal(blog);
+                
                 article.innerHTML = `
                     <div class="blog-post-meta">
                         <span>📅 ${new Date(blog.date).toLocaleDateString('zh-CN')}</span>
-                        <span>👀 ${blog.views} 浏览</span>
                     </div>
                     <h3 class="blog-post-title">${blog.title}</h3>
                     <div class="blog-post-excerpt">
@@ -1077,10 +1153,45 @@
                     <div class="blog-post-tags">
                         ${Array.isArray(blog.tags) ? blog.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : ''}
                     </div>
+                    <div class="read-more">点击阅读全文 →</div>
                 `;
                 
-                container.insertBefore(article, container.firstChild);
+                container.appendChild(article);
             });
+        }
+
+        // 打开博客详情弹窗
+        function openBlogModal(blog) {
+            const modal = document.getElementById('blogModal');
+            const title = document.getElementById('blogModalTitle');
+            const meta = document.getElementById('blogModalMeta');
+            const content = document.getElementById('blogModalContent');
+            
+            title.textContent = blog.title;
+            meta.innerHTML = `
+                <span>📅 ${new Date(blog.date).toLocaleDateString('zh-CN')}</span>
+                ${Array.isArray(blog.tags) && blog.tags.length > 0 ? 
+                  '<span style="margin-left: 20px;">🏷️ ' + blog.tags.join(', ') + '</span>' : ''}
+            `;
+            
+            // 简单的Markdown渲染（基础功能）
+            const htmlContent = blog.content
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/## (.*?)(<br>|$)/g, '<h2>$1</h2>')
+                .replace(/# (.*?)(<br>|$)/g, '<h1>$1</h1>');
+            
+            content.innerHTML = htmlContent;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+
+        // 关闭博客详情弹窗
+        function closeBlogModal() {
+            document.getElementById('blogModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         // 关闭二维码弹窗
@@ -1090,9 +1201,15 @@
 
         // 点击弹窗外部关闭
         window.onclick = function(event) {
-            const modal = document.getElementById('qrModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
+            const qrModal = document.getElementById('qrModal');
+            const blogModal = document.getElementById('blogModal');
+            
+            if (event.target === qrModal) {
+                qrModal.style.display = 'none';
+            }
+            if (event.target === blogModal) {
+                blogModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             }
         }
 
